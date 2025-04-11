@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar.astro'
 import Scrollbar from '@/components/Widgets/Scrollbar.astro'
 import themeConfig from '@/config'
 import Head from '@/layouts/Head.astro'
+import SpeedInsights from "@vercel/speed-insights/astro"
 import { getPageInfo } from '@/utils/page'
 import '@/styles/font.css'
 import '@/styles/global.css'
@@ -45,6 +46,7 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
         <slot />
       </main>
       <Footer />
+      <SpeedInsights/>
     </div>
     <Scrollbar />
     <Button supportedLangs={supportedLangs} />
