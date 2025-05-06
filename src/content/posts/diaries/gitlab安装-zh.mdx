@@ -1,0 +1,77 @@
+---
+title: Gitlab部署 
+published: 2025-05-05
+tags:
+  - 技术
+  - gitlab
+toc: false
+lang: zh
+abbrlink: gitlab
+---
+
+# Gitlab部署
+
+## 一、安装环境
+
+1. 安装docker
+2. 安装docker-compose
+3. 部署系统
+
+## 二、安装配置
+
+1. docker-compose.yml文件
+
+```yml
+version: '3.6'
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:16.11.5-ce.0
+    container_name: gitlab
+    restart: always
+    hostname: 'YOUR_HOST_IP'   # ⚠️ 替换为你服务器的公网或内网 IP
+    ports:
+      - "9980:80"              # HTTP 端口
+      - "9922:22"              # SSH 克隆端口
+    volumes:
+      - ./config:/etc/gitlab
+      - ./logs:/var/log/gitlab
+      - ./data:/var/opt/gitlab
+    shm_size: '256m'
+```
+
+## 三、问题记录
+
+你应该先测试连接：
+```
+ssh -p 9922 git@165.154.112.70
+```
+如果你看到 GitLab 返回的信息，如：
+```
+Welcome to GitLab, @yourname!
+```
+说明成功了。
+
+然后克隆使用：
+```
+git clone ssh://git@165.154.112.70:9922/test.lv/test.git
+```
+## 四、使用问题
+
+**找到管理员账号**
+
+默认管理员账户是 root，而密码会在首次启动时自动生成，保存在容器内一个文件中。
+
+```
+docker exec -it gitlab cat /etc/gitlab/initial_root_password
+```
+
+输出
+
+```
+Password: 9v1L3XsQyETyxXr7A5pHnABCDefgHijK
+```
+
+**注册新用户**
+
+注册用户后，需要登陆管理员账号，然后点击通过
